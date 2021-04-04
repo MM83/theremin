@@ -92,6 +92,8 @@ int input0 = 0,
     input3 = 3;
 
 void setup() {
+  Serial.begin(9600);
+  Serial.println("START");
   pinMode(A0, INPUT);
   lcd.begin(16, 2);
   lcd.print(SYNTH_NAME);
@@ -117,7 +119,12 @@ void setPatch(int patch)
 
 
 void updateControl(){
-  // put changing controls in here
+
+  if(Serial.available() > 0){
+    byte next = Serial.read();
+    
+  }
+  
    _patchInput = mozziAnalogRead(PATCH_IN) / 200;
    if(_patchInput != _patch)
     setPatch(_patchInput);
@@ -154,9 +161,9 @@ void updateControl(){
     break;
     case 4:
       index = min(36, input0 / 40);
-      int mode = (input3 / 50) % 7;
+      int mode = index + (input3) % 7;
       int interval = mode + ((input2 / 50) % 14);
-      aTriangle0.setFreq(CHROMATIC_FREQUENCIES[mode]);
+      aTriangle0.setFreq(CHROMATIC_FREQUENCIES[index]);
       aTriangle1.setFreq(CHROMATIC_FREQUENCIES[interval]);
     break;
    }
